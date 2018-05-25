@@ -26,7 +26,6 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 public class Pembelian_Return extends javax.swing.JFrame {
 
     public String totalclone, kov;
-    ;
     public Float Tempharga;
     public float subtotal1 = 0, hargajadi1 = 0, diskonke21 = 0, totalqty = 0, total = 0, diskon = 0, diskonp1 = 0, diskonp11, diskonp21 = 0; //penjumlahan
     public float jumlah = 0, harga = 0, subtotal = 0, diskonp = 0, diskonrp = 0, diskonp2 = 0, diskonrp2 = 0, hargajadi = 0;//panggil colom tabel
@@ -40,7 +39,6 @@ public class Pembelian_Return extends javax.swing.JFrame {
         AutoCompleteDecorator.decorate(comFakturBeli);
         AutoCompleteDecorator.decorate(comSupplier);
         loadComboJenis();
-        //     loadComTableBarang();
         tanggal_jam_sekarang();
         loadComTableLokasi();
         AturlebarKolom();
@@ -95,22 +93,15 @@ public class Pembelian_Return extends javax.swing.JFrame {
 
     }
 
-//    void loadComTableBarang() {
-//        try {
-//            String sql = "select * from barang order by nama_barang asc";
-//            java.sql.Connection conn = (Connection) Koneksi.configDB();
-//            java.sql.Statement stm = conn.createStatement();
-//            java.sql.ResultSet res = stm.executeQuery(sql);
-//            while (res.next()) {
-//                String name = res.getString(4);
-//                comTableBarang.addItem(name);
-//
-//            }
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(null, "Eror" + e);
-//        }
-//
-//    }
+    void ClearTable() {
+
+        DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
+        int row = tbl_Pembelian.getRowCount();
+        for (int i = 0; i < row; i++) {
+            model.removeRow(0);
+        }
+    }
+
     void loadComboJenis() {
 //        System.out.println(comJenis.getSelectedItem());
         if (comJenis.getSelectedItem().equals("BY FAKTUR BELI")) {
@@ -744,12 +735,13 @@ public class Pembelian_Return extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void comFakturBeliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comFakturBeliActionPerformed
+
         DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
         int baris = tbl_Pembelian.getRowCount();
         tabelModel = tbl_Pembelian.getModel();
+        int no = 1;
         int selectedRow = tbl_Pembelian.getSelectedRow();
-        loadNumberTable();
-        tbl_Pembelian.removeAll();
+        ClearTable();
         try {
             String sql = "SELECT * FROM detail_pembelian , lokasi, barang_konversi, konversi WHERE detail_pembelian.kode_lokasi = lokasi.kode_lokasi and detail_pembelian.kode_konversi=barang_konversi.kode_barang_konversi and barang_konversi.kode_konversi = konversi.kode_konversi and detail_pembelian.no_faktur_pembelian = '" + comFakturBeli.getSelectedItem() + "'";
             java.sql.Connection conn = (Connection) Koneksi.configDB();
@@ -758,8 +750,8 @@ public class Pembelian_Return extends javax.swing.JFrame {
             System.out.println(sql);
             while (res.next()) {
 
-                String[] data = {
-                    "",
+               model.addRow(new Object[]{
+                    no++,
                     res.getString("kode_barang"),
                     res.getString("nama_barang_edit"),
                     res.getString("nama_lokasi"),
@@ -771,13 +763,11 @@ public class Pembelian_Return extends javax.swing.JFrame {
                     "",
                     "",
                     ""
-                };
-
-                model.addRow(data);
+                });
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Eror" + e);
-        }
+        };
 
     }//GEN-LAST:event_comFakturBeliActionPerformed
 
@@ -889,7 +879,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
     }//GEN-LAST:event_comSupplierActionPerformed
 
     private void comTableBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comTableBarangActionPerformed
-     
+
     }//GEN-LAST:event_comTableBarangActionPerformed
 
     private void comJenisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comJenisActionPerformed
@@ -924,11 +914,11 @@ public class Pembelian_Return extends javax.swing.JFrame {
     }//GEN-LAST:event_tbl_PembelianKeyPressed
 
     private void comTableKonvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comTableKonvActionPerformed
-    
+
     }//GEN-LAST:event_comTableKonvActionPerformed
 
     private void comTableLokasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comTableLokasiActionPerformed
-       
+
     }//GEN-LAST:event_comTableLokasiActionPerformed
 
     /**
