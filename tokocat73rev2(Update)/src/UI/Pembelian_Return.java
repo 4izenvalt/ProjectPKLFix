@@ -6,7 +6,6 @@
 package UI;
 
 import Class.Koneksi;
-import static UI.Pembelian_Transaksi.rptabel;
 import com.sun.glass.events.KeyEvent;
 import java.sql.Connection;
 import java.util.Calendar;
@@ -37,30 +36,11 @@ public class Pembelian_Return extends javax.swing.JFrame {
         initComponents();
         this.setVisible(true);
         AutoCompleteDecorator.decorate(comFakturBeli);
-        AutoCompleteDecorator.decorate(comSupplier);
         loadComboJenis();
         tanggal_jam_sekarang();
-        loadComTableLokasi();
         AturlebarKolom();
 
     }
-
-    public void loadComOrder() {
-        try {
-            String sql = "select * from customer where nama_customer = '" + comFakturBeli.getSelectedItem() + "'";
-            java.sql.Connection conn = (Connection) Koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            while (res.next()) {
-                Object[] order = new Object[2];
-                order[0] = res.getString(2);
-                comFakturBeli.addItem((String) order[0]);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Eror" + e);
-        }
-    }
-
     public void loadComFakturBeli() {
         try {
             String sql = "SELECT * FROM `pembelian` ORDER BY `no_faktur_pembelian` ASC";
@@ -77,22 +57,6 @@ public class Pembelian_Return extends javax.swing.JFrame {
         }
     }
 
-    void loadComTableLokasi() {
-        try {
-            String sql = "select * from lokasi";
-            java.sql.Connection conn = (Connection) Koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            while (res.next()) {
-                String name = res.getString(2);
-                comTableLokasi.addItem(name);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Eror" + e);
-        }
-
-    }
-
     void ClearTable() {
 
         DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
@@ -107,42 +71,24 @@ public class Pembelian_Return extends javax.swing.JFrame {
         if (comJenis.getSelectedItem().equals("BY FAKTUR BELI")) {
             autonumber();
             loadComFakturBeli();
-            comSupplier.removeAllItems();
-            comSupplier.setEnabled(false);
+            txt_Supplier.setEnabled(false);
             txt_namaSupply.setEnabled(false);
             txt_namaSupply.setText("");
             txt_almtSupply.setEnabled(false);
             txt_almtSupply.setText("");
             comFakturBeli.setEnabled(true);
         } else if (comJenis.getSelectedItem().equals("FAKTUR BEBAS")) {
-            loadSupplier();
             comFakturBeli.removeAllItems();
             comFakturBeli.setEnabled(false);
             txt_tanggal.setText("");
             txt_noRetur.setText("");
-            comSupplier.setEnabled(true);
             txt_namaSupply.setEnabled(true);
             txt_almtSupply.setEnabled(true);
 
         }
     }
 
-    void loadSupplier() {
-
-        try {
-            String sql = "select * from supplier";
-            java.sql.Connection conn = (Connection) Koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            while (res.next()) {
-                String name = res.getString(2);
-                comSupplier.addItem(name);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Eror" + e);
-        }
-
-    }
+   
 
     public void tanggal_jam_sekarang() {
         Thread p = new Thread() {
@@ -281,7 +227,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
         txt_diskonRp = new javax.swing.JTextField();
         comFakturBeli = new javax.swing.JComboBox<>();
         txt_tanggal = new javax.swing.JTextField();
-        comSupplier = new javax.swing.JComboBox<>();
+        txt_Supplier = new javax.swing.JTextField();
 
         comTableBarang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -530,13 +476,23 @@ public class Pembelian_Return extends javax.swing.JFrame {
                 comFakturBeliActionPerformed(evt);
             }
         });
+        comFakturBeli.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                comFakturBeliKeyPressed(evt);
+            }
+        });
 
         txt_tanggal.setEnabled(false);
 
-        comSupplier.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Nama Suplier" }));
-        comSupplier.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comSupplierActionPerformed(evt);
+        txt_Supplier.setBackground(new java.awt.Color(204, 255, 204));
+        txt_Supplier.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txt_SupplierMouseClicked(evt);
+            }
+        });
+        txt_Supplier.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_SupplierKeyPressed(evt);
             }
         });
 
@@ -554,7 +510,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel34)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                                 .addComponent(txt_noRetur, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -572,7 +528,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addGap(40, 40, 40)
                                         .addComponent(txt_tanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                        .addGap(33, 33, 33)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel22)
                             .addComponent(jLabel24)
@@ -580,15 +536,11 @@ public class Pembelian_Return extends javax.swing.JFrame {
                             .addComponent(jLabel26))
                         .addGap(36, 36, 36)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_Keterangan, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txt_almtSupply, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(comSupplier, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txt_namaSupply, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txt_namaSupply, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txt_Supplier, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel27)
@@ -598,7 +550,11 @@ public class Pembelian_Return extends javax.swing.JFrame {
                                         .addComponent(jLabel28)
                                         .addGap(23, 23, 23)
                                         .addComponent(txt_diskonPersen, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(96, 96, 96))))
+                                .addGap(96, 96, 96))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txt_almtSupply, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(txt_Keterangan)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel30)
@@ -650,7 +606,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
                                 .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jSeparator3))
                             .addComponent(jLabel1))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 17, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -663,7 +619,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
                             .addGap(2, 2, 2))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel22)
-                            .addComponent(comSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txt_Supplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel28)
@@ -681,8 +637,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_noRetur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel34))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel34)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -696,14 +651,14 @@ public class Pembelian_Return extends javax.swing.JFrame {
                                     .addComponent(txt_diskonRp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel27))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txt_almtSupply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel24))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txt_Keterangan, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel26))
-                        .addGap(13, 13, 13)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel24)
+                            .addComponent(txt_almtSupply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(16, 16, 16)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel26)
+                            .addComponent(txt_Keterangan, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -747,17 +702,17 @@ public class Pembelian_Return extends javax.swing.JFrame {
             java.sql.Connection conn = (Connection) Koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet res = stm.executeQuery(sql);
-            System.out.println(sql);
             while (res.next()) {
 
-               model.addRow(new Object[]{
+                model.addRow(new Object[]{
                     no++,
                     res.getString("kode_barang"),
                     res.getString("nama_barang_edit"),
                     res.getString("nama_lokasi"),
                     res.getString("nama_konversi"),
-                    res.getString("jumlah_barang"),
+                    "0",
                     res.getString("harga_pembelian"),
+                    "",
                     "",
                     "",
                     "",
@@ -768,7 +723,21 @@ public class Pembelian_Return extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Eror" + e);
         };
-
+         try {
+            String sql = "SELECT pembelian.kode_pembelian, supplier.nama_supplier, supplier.alamat_supplier FROM pembelian, supplier where  pembelian.kode_supplier = supplier.kode_supplier AND no_faktur_pembelian = '" + comFakturBeli.getSelectedItem() + "'";
+            java.sql.Connection conn = (Connection) Koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+            while (res.next()) {
+                String namaS = res.getString(2);
+                String alamatS = res.getString(3);
+                txt_Supplier.setText(namaS);
+                txt_namaSupply.setText(namaS);
+                txt_almtSupply.setText(alamatS);
+            }
+        }catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Eror" + e);
+        };
     }//GEN-LAST:event_comFakturBeliActionPerformed
 
     private void txt_diskonRpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_diskonRpKeyPressed
@@ -861,23 +830,6 @@ public class Pembelian_Return extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_noReturMouseClicked
 
-    private void comSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comSupplierActionPerformed
-        try {
-            String sql = "select * from supplier where nama_supplier = '" + comSupplier.getSelectedItem() + "'";
-            java.sql.Connection conn = (Connection) Koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            while (res.next()) {
-                String nama = res.getString(2);
-                String alamat = res.getString(3);
-                txt_namaSupply.setText(nama);
-                txt_almtSupply.setText(alamat);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Eror" + e);
-        }
-    }//GEN-LAST:event_comSupplierActionPerformed
-
     private void comTableBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comTableBarangActionPerformed
 
     }//GEN-LAST:event_comTableBarangActionPerformed
@@ -921,9 +873,21 @@ public class Pembelian_Return extends javax.swing.JFrame {
 
     }//GEN-LAST:event_comTableLokasiActionPerformed
 
+    private void comFakturBeliKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comFakturBeliKeyPressed
+       
+    }//GEN-LAST:event_comFakturBeliKeyPressed
+
+    private void txt_SupplierMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_SupplierMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_SupplierMouseClicked
+
+    private void txt_SupplierKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_SupplierKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_SupplierKeyPressed
+
     /**
-     * @param args the command line arguments
-     */
+         * @param args the command line arguments
+         */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1030,7 +994,6 @@ public class Pembelian_Return extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> comFakturBeli;
     private javax.swing.JComboBox<String> comJenis;
-    private javax.swing.JComboBox<String> comSupplier;
     private javax.swing.JComboBox<String> comTableBarang;
     private javax.swing.JComboBox<String> comTableKonv;
     private javax.swing.JComboBox<String> comTableLokasi;
@@ -1063,6 +1026,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JTable tbl_Pembelian;
     private javax.swing.JTextField txt_Keterangan;
+    private javax.swing.JTextField txt_Supplier;
     private javax.swing.JTextField txt_almtSupply;
     private javax.swing.JTextField txt_diskonPersen;
     private javax.swing.JTextField txt_diskonRp;
