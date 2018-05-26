@@ -7,12 +7,16 @@ package UI;
 
 import Class.Koneksi;
 import com.sun.glass.events.KeyEvent;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -41,6 +45,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
         AturlebarKolom();
 
     }
+
     public void loadComFakturBeli() {
         try {
             String sql = "SELECT * FROM `pembelian` ORDER BY `no_faktur_pembelian` ASC";
@@ -87,8 +92,6 @@ public class Pembelian_Return extends javax.swing.JFrame {
 
         }
     }
-
-   
 
     public void tanggal_jam_sekarang() {
         Thread p = new Thread() {
@@ -331,6 +334,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
         jLabel71.setText("Esc-Exit");
 
         txt_namaSupply.setBackground(new java.awt.Color(204, 255, 204));
+        txt_namaSupply.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txt_namaSupply.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txt_namaSupplyMouseClicked(evt);
@@ -343,6 +347,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
         });
 
         txt_almtSupply.setBackground(new java.awt.Color(204, 255, 204));
+        txt_almtSupply.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txt_almtSupply.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txt_almtSupplyMouseClicked(evt);
@@ -485,6 +490,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
         txt_tanggal.setEnabled(false);
 
         txt_Supplier.setBackground(new java.awt.Color(204, 255, 204));
+        txt_Supplier.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txt_Supplier.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txt_SupplierMouseClicked(evt);
@@ -606,7 +612,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
                                 .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jSeparator3))
                             .addComponent(jLabel1))
-                        .addGap(0, 17, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -658,7 +664,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel26)
                             .addComponent(txt_Keterangan, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -698,7 +704,9 @@ public class Pembelian_Return extends javax.swing.JFrame {
         int selectedRow = tbl_Pembelian.getSelectedRow();
         ClearTable();
         try {
-            String sql = "SELECT * FROM detail_pembelian , lokasi, barang_konversi, konversi WHERE detail_pembelian.kode_lokasi = lokasi.kode_lokasi and detail_pembelian.kode_konversi=barang_konversi.kode_barang_konversi and barang_konversi.kode_konversi = konversi.kode_konversi and detail_pembelian.no_faktur_pembelian = '" + comFakturBeli.getSelectedItem() + "'";
+            String sql = "SELECT * FROM detail_pembelian , lokasi, barang_konversi, konversi WHERE detail_pembelian.kode_lokasi = lokasi.kode_lokasi and "
+                    + "detail_pembelian.kode_konversi=barang_konversi.kode_barang_konversi and barang_konversi.kode_konversi = konversi.kode_konversi and "
+                    + "detail_pembelian.no_faktur_pembelian = '" + comFakturBeli.getSelectedItem() + "'";
             java.sql.Connection conn = (Connection) Koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet res = stm.executeQuery(sql);
@@ -723,8 +731,10 @@ public class Pembelian_Return extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Eror" + e);
         };
-         try {
-            String sql = "SELECT pembelian.kode_pembelian, supplier.nama_supplier, supplier.alamat_supplier FROM pembelian, supplier where  pembelian.kode_supplier = supplier.kode_supplier AND no_faktur_pembelian = '" + comFakturBeli.getSelectedItem() + "'";
+        try {
+            String sql = "SELECT pembelian.kode_pembelian, supplier.nama_supplier, supplier.alamat_supplier FROM "
+                    + "pembelian, supplier where  pembelian.kode_supplier = supplier.kode_supplier AND "
+                    + "no_faktur_pembelian = '" + comFakturBeli.getSelectedItem() + "'";
             java.sql.Connection conn = (Connection) Koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet res = stm.executeQuery(sql);
@@ -735,7 +745,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
                 txt_namaSupply.setText(namaS);
                 txt_almtSupply.setText(alamatS);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Eror" + e);
         };
     }//GEN-LAST:event_comFakturBeliActionPerformed
@@ -763,14 +773,41 @@ public class Pembelian_Return extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_diskonPersenMouseClicked
 
     private void tbl_PembelianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_PembelianMouseClicked
-//tbl_Pembelian.
-//        Pembelian_KotakHistoriBarang kb = new Pembelian_KotakHistoriBarang();
-//        kb.setVisible(true);
-//        kb.setLocationRelativeTo(null);
 
-//        if (kb.isEnabled()) {
-//           kb.requestFocus();
-//        }
+        int selectedRow = tbl_Pembelian.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
+        String Kode = String.valueOf(model.getValueAt(selectedRow, 1));
+        tbl_Pembelian.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table = (JTable) mouseEvent.getSource();
+                Point point = mouseEvent.getPoint();
+                int row = table.rowAtPoint(point);
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && table.getSelectedColumn() == 1) {
+                    Pembelian_KotakHistoriBarang.getObj().setVisible(true);
+                     
+                    String huruf = String.valueOf(Kode.substring(1, 5));
+                    int KodeFinal = Integer.valueOf(Kode.substring(5)) - 1;
+                    System.out.println("Kode Item yang dipilih : " +KodeFinal);
+
+                    try {
+                        String sql = "SELECT pembelian.no_faktur_pembelian , pembelian.tgl_pembelian, pembelian.discon_persen,pembelian.discon_rp ,detail_pembelian.no_faktur_pembelian,"
+                                + "detail_pembelian.jumlah_barang,detail_pembelian.kode_barang,detail_pembelian.harga_pembelian FROM pembelian,detail_pembelian "
+                                + "WHERE pembelian.no_faktur_pembelian = detail_pembelian.no_faktur_pembelian "
+                                + "AND pembelian.no_faktur_pembelian = '" + comFakturBeli.getSelectedItem() + "' AND detail_pembelian.kode_barang = '" + Kode + "'";
+                        java.sql.Connection conn = (Connection) Koneksi.configDB();
+                        java.sql.Statement stm = conn.createStatement();
+                        java.sql.ResultSet res = stm.executeQuery(sql);
+                      //  System.out.println(sql);
+                        while (res.next()) {
+                            
+                            System.out.println("data = " + res.getString("tgl_pembelian"));
+                        }
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Eror" + e);
+                    }
+                }
+            }
+        });
     }//GEN-LAST:event_tbl_PembelianMouseClicked
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
@@ -874,7 +911,7 @@ public class Pembelian_Return extends javax.swing.JFrame {
     }//GEN-LAST:event_comTableLokasiActionPerformed
 
     private void comFakturBeliKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comFakturBeliKeyPressed
-       
+
     }//GEN-LAST:event_comFakturBeliKeyPressed
 
     private void txt_SupplierMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_SupplierMouseClicked
@@ -886,8 +923,8 @@ public class Pembelian_Return extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_SupplierKeyPressed
 
     /**
-         * @param args the command line arguments
-         */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -990,7 +1027,6 @@ public class Pembelian_Return extends javax.swing.JFrame {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> comFakturBeli;
     private javax.swing.JComboBox<String> comJenis;

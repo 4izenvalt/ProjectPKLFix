@@ -13,13 +13,18 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableColumn;
 import com.sun.glass.events.KeyEvent;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Vector;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import UI.Pembelian_KotakHistoriBarang;
 
 /**
  *
@@ -414,6 +419,11 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         tbl_Pembelian.setToolTipText("");
         tbl_Pembelian.setRequestFocusEnabled(false);
         tbl_Pembelian.setRowSelectionAllowed(false);
+        tbl_Pembelian.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_PembelianMouseClicked(evt);
+            }
+        });
         tbl_Pembelian.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 tbl_PembelianKeyPressed(evt);
@@ -1154,77 +1164,77 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_dpKeyReleased
 
     private void tbl_PembelianKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_PembelianKeyReleased
-    DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
-    float baris = tbl_Pembelian.getRowCount();
+        DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
+        float baris = tbl_Pembelian.getRowCount();
 
-    if (tbl_Pembelian.getRowCount () 
-        >= 0) {
+        if (tbl_Pembelian.getRowCount()
+                >= 0) {
             int kov = 0;
 
-        TableModel tabelModel;
-        tabelModel = tbl_Pembelian.getModel();
-        int i = 0;
+            TableModel tabelModel;
+            tabelModel = tbl_Pembelian.getModel();
+            int i = 0;
 
-        for (i = 0; i < baris; i++) {
+            for (i = 0; i < baris; i++) {
 
-            if (tabelModel.getValueAt(i, 8).toString().equals("")) {
-                diskonp = 0;
-            } else {
-                diskonp = Float.parseFloat(tabelModel.getValueAt(i, 8).toString());
-            }
-            if (tabelModel.getValueAt(i, 9).toString().equalsIgnoreCase("")) {
-                diskonrp = 0;
-            } else {
-                diskonrp = Float.parseFloat(tabelModel.getValueAt(i, 9).toString());
-            }
-            if (tabelModel.getValueAt(i, 10).toString().equals("")) {
-                diskonp2 = 0;
-            } else {
-                diskonp2 = Float.parseFloat(tabelModel.getValueAt(i, 10).toString());
-            }
-            if (tabelModel.getValueAt(i, 11).toString().equals("")) {
-                diskonrp2 = 0;
-            } else {
-                diskonrp2 = Float.parseFloat(tabelModel.getValueAt(i, 11).toString());
-            }
-            if (tabelModel.getValueAt(i, 5).toString().equals("")) {
-                jumlah = 0;
-            } else {
-                jumlah = Float.parseFloat(tabelModel.getValueAt(i, 5).toString());
-            }
+                if (tabelModel.getValueAt(i, 8).toString().equals("")) {
+                    diskonp = 0;
+                } else {
+                    diskonp = Float.parseFloat(tabelModel.getValueAt(i, 8).toString());
+                }
+                if (tabelModel.getValueAt(i, 9).toString().equalsIgnoreCase("")) {
+                    diskonrp = 0;
+                } else {
+                    diskonrp = Float.parseFloat(tabelModel.getValueAt(i, 9).toString());
+                }
+                if (tabelModel.getValueAt(i, 10).toString().equals("")) {
+                    diskonp2 = 0;
+                } else {
+                    diskonp2 = Float.parseFloat(tabelModel.getValueAt(i, 10).toString());
+                }
+                if (tabelModel.getValueAt(i, 11).toString().equals("")) {
+                    diskonrp2 = 0;
+                } else {
+                    diskonrp2 = Float.parseFloat(tabelModel.getValueAt(i, 11).toString());
+                }
+                if (tabelModel.getValueAt(i, 5).toString().equals("")) {
+                    jumlah = 0;
+                } else {
+                    jumlah = Float.parseFloat(tabelModel.getValueAt(i, 5).toString());
+                }
 //              
-            harga = Float.parseFloat(tabelModel.getValueAt(i, 6).toString());
-            subtotal1 = jumlah * harga;
+                harga = Float.parseFloat(tabelModel.getValueAt(i, 6).toString());
+                subtotal1 = jumlah * harga;
 
 //                    diskonp11 =  ((subtotal * diskonp)/100);
 //                    diskonp21 =  ((subtotal * diskonp2)/100);
-            diskon = ((diskonp + diskonp2) * subtotal1 / 100);
+                diskon = ((diskonp + diskonp2) * subtotal1 / 100);
 
-            hargajadi1 = subtotal1 - diskon - diskonrp - diskonrp2;
+                hargajadi1 = subtotal1 - diskon - diskonrp - diskonrp2;
 
-            total += hargajadi1;
-            totalqty += jumlah;
-        }
+                total += hargajadi1;
+                totalqty += jumlah;
+            }
 
-        model.setValueAt(rptabel(String.valueOf(subtotal1)), i - 1, 7);
-        model.setValueAt(rptabel(String.valueOf(hargajadi1)), i - 1, 12);
-        model.setValueAt(rptabel(String.valueOf(harga)), i - 1, 6);
+            model.setValueAt(rptabel(String.valueOf(subtotal1)), i - 1, 7);
+            model.setValueAt(rptabel(String.valueOf(hargajadi1)), i - 1, 12);
+            model.setValueAt(rptabel(String.valueOf(harga)), i - 1, 6);
 //                model.setValueAt(rptabel(String.valueOf(diskonp)), i-1, 9);
 //                 model.setValueAt(rptabel(String.valueOf(diskonp2)), i-1, 11); 
-        model.setValueAt(rptabelkembali(String.valueOf(harga)), i - 1, 6);
+            model.setValueAt(rptabelkembali(String.valueOf(harga)), i - 1, 6);
 //                   model.setValueAt(rptabelkembali(String.valueOf(diskonp)), i-1, 9); 
 //                   model.setValueAt(rptabelkembali(String.valueOf(diskonp2)), i-1, 11); 
 //            }
-        txt_tbl_total.setText("" + total);
-        txt_jumQty.setText("" + totalqty);
+            txt_tbl_total.setText("" + total);
+            txt_jumQty.setText("" + totalqty);
 //                System.out.println("qty = " + totalqty);}
-        totalclone = txt_tbl_total.getText();
-        dpnya();
+            totalclone = txt_tbl_total.getText();
+            dpnya();
 
-    }
+        }
 
 //               
-    loadNumberTable();
+        loadNumberTable();
 
     }//GEN-LAST:event_tbl_PembelianKeyReleased
 
@@ -1467,6 +1477,44 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_comTableKonvActionPerformed
 
+    private void tbl_PembelianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_PembelianMouseClicked
+       // Pembelian_KotakHistoriBarang kb = new Pembelian_KotakHistoriBarang();
+//        kb.setVisible(false);
+        int selectedRow = tbl_Pembelian.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
+        int baris = tbl_Pembelian.getSelectedRow();
+        String Kode = String.valueOf(model.getValueAt(baris, 0));
+        tbl_Pembelian.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table = (JTable) mouseEvent.getSource();
+                Point point = mouseEvent.getPoint();
+                int row = table.rowAtPoint(point);
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && table.getSelectedColumn() == 0) {
+//                    
+//                    kb.setVisible(true);
+//                    kb.setLocationRelativeTo(null);
+                    try {
+                        String sql = "select * from barang where kode_barang = '" + Kode +"'";
+                        java.sql.Connection conn = (Connection) Koneksi.configDB();
+                        java.sql.Statement stm = conn.createStatement();
+                        java.sql.ResultSet res = stm.executeQuery(sql);
+                        System.out.println(sql);
+                        while (res.next()) {
+//                            String nama = res.getString(2);
+//                            String alamat = res.getString(3);
+//                            String rek = res.getString(9);
+//                            txt_nmSupply.setText(nama);
+//                            txt_almtSupply.setText(alamat);
+//                            txt_rekSupply.setText(rek);
+                        }
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Eror" + e);
+                    }
+                }
+            }
+        });
+    }//GEN-LAST:event_tbl_PembelianMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -1482,35 +1530,23 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
 
-                
-
-}
+                }
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Pembelian_Transaksi.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        
-
-} catch (InstantiationException ex) {
+        } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(Pembelian_Transaksi.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        
-
-} catch (IllegalAccessException ex) {
+        } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(Pembelian_Transaksi.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        
-
-} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Pembelian_Transaksi.class
-
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
