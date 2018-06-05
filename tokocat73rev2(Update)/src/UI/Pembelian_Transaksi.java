@@ -340,7 +340,6 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
             }
         });
 
-        comTableKonv.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         comTableKonv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comTableKonvActionPerformed(evt);
@@ -1095,7 +1094,7 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
         comTableKonv.removeAllItems();
         try {
             for (int i = 0; i < baris; i++) {
-                kode_barang = Integer.parseInt(tabelModel.getValueAt(i, 1).toString());
+//                kode_barang = Integer.parseInt(tabelModel.getValueAt(i, 1).toString());
 //                if (kode_barang != 0) {
 //                    System.out.println("Kosong boss");
 //                } else {
@@ -1120,7 +1119,7 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
 
         } catch (Exception e) {
             //           JOptionPane.showMessageDialog(null, "Eror nyaaaaa: ");
-            e.printStackTrace();
+            
         }
 
     }//GEN-LAST:event_comTableBarangActionPerformed
@@ -1478,38 +1477,18 @@ public final class Pembelian_Transaksi extends javax.swing.JFrame {
     }//GEN-LAST:event_comTableKonvActionPerformed
 
     private void tbl_PembelianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_PembelianMouseClicked
-       // Pembelian_KotakHistoriBarang kb = new Pembelian_KotakHistoriBarang();
-//        kb.setVisible(false);
         int selectedRow = tbl_Pembelian.getSelectedRow();
         DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
-        int baris = tbl_Pembelian.getSelectedRow();
-        String Kode = String.valueOf(model.getValueAt(baris, 0));
+        String Kode = String.valueOf(model.getValueAt(selectedRow, 1));
         tbl_Pembelian.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent mouseEvent) {
                 JTable table = (JTable) mouseEvent.getSource();
                 Point point = mouseEvent.getPoint();
                 int row = table.rowAtPoint(point);
-                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && table.getSelectedColumn() == 0) {
-//                    
-//                    kb.setVisible(true);
-//                    kb.setLocationRelativeTo(null);
-                    try {
-                        String sql = "select * from barang where kode_barang = '" + Kode +"'";
-                        java.sql.Connection conn = (Connection) Koneksi.configDB();
-                        java.sql.Statement stm = conn.createStatement();
-                        java.sql.ResultSet res = stm.executeQuery(sql);
-                        System.out.println(sql);
-                        while (res.next()) {
-//                            String nama = res.getString(2);
-//                            String alamat = res.getString(3);
-//                            String rek = res.getString(9);
-//                            txt_nmSupply.setText(nama);
-//                            txt_almtSupply.setText(alamat);
-//                            txt_rekSupply.setText(rek);
-                        }
-                    } catch (Exception e) {
-                        JOptionPane.showMessageDialog(null, "Eror" + e);
-                    }
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && table.getSelectedColumn() == 1) {
+
+                    Pembelian_KotakHistoriBarang hb = new Pembelian_KotakHistoriBarang(Kode);
+                    hb.getObj(1).setVisible(true);      
                 }
             }
         });

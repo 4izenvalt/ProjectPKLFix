@@ -21,12 +21,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import UI.Pembelian_KotakHistoriBarang;
 
 /**
  *
  * @author User
  */
-public class Pembelian_Return extends javax.swing.JFrame {
+public final class Pembelian_Return extends javax.swing.JFrame {
 
     public String totalclone, kov;
     public Float Tempharga;
@@ -773,41 +774,8 @@ public class Pembelian_Return extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_diskonPersenMouseClicked
 
     private void tbl_PembelianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_PembelianMouseClicked
+//       Pembelian_KotakHistoriBarang his = new Pembelian_KotakHistoriBarang();
 
-        int selectedRow = tbl_Pembelian.getSelectedRow();
-        DefaultTableModel model = (DefaultTableModel) tbl_Pembelian.getModel();
-        String Kode = String.valueOf(model.getValueAt(selectedRow, 1));
-        tbl_Pembelian.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent mouseEvent) {
-                JTable table = (JTable) mouseEvent.getSource();
-                Point point = mouseEvent.getPoint();
-                int row = table.rowAtPoint(point);
-                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && table.getSelectedColumn() == 1) {
-                    Pembelian_KotakHistoriBarang.getObj().setVisible(true);
-                     
-                    String huruf = String.valueOf(Kode.substring(1, 5));
-                    int KodeFinal = Integer.valueOf(Kode.substring(5)) - 1;
-                    System.out.println("Kode Item yang dipilih : " +KodeFinal);
-
-                    try {
-                        String sql = "SELECT pembelian.no_faktur_pembelian , pembelian.tgl_pembelian, pembelian.discon_persen,pembelian.discon_rp ,detail_pembelian.no_faktur_pembelian,"
-                                + "detail_pembelian.jumlah_barang,detail_pembelian.kode_barang,detail_pembelian.harga_pembelian FROM pembelian,detail_pembelian "
-                                + "WHERE pembelian.no_faktur_pembelian = detail_pembelian.no_faktur_pembelian "
-                                + "AND pembelian.no_faktur_pembelian = '" + comFakturBeli.getSelectedItem() + "' AND detail_pembelian.kode_barang = '" + Kode + "'";
-                        java.sql.Connection conn = (Connection) Koneksi.configDB();
-                        java.sql.Statement stm = conn.createStatement();
-                        java.sql.ResultSet res = stm.executeQuery(sql);
-                      //  System.out.println(sql);
-                        while (res.next()) {
-                            
-                            System.out.println("data = " + res.getString("tgl_pembelian"));
-                        }
-                    } catch (Exception e) {
-                        JOptionPane.showMessageDialog(null, "Eror" + e);
-                    }
-                }
-            }
-        });
     }//GEN-LAST:event_tbl_PembelianMouseClicked
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked

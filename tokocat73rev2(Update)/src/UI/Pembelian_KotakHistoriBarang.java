@@ -5,7 +5,10 @@
  */
 package UI;
 
+import Class.Koneksi;
 import UI.Pembelian_Transaksi;
+import java.sql.Connection;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,18 +19,61 @@ public class Pembelian_KotakHistoriBarang extends javax.swing.JFrame {
     /**
      * Creates new form Pembelian_KotakHistoriBarang
      */
-    private static Pembelian_KotakHistoriBarang obj = null;
+    static String Kode = "";
 
-    private Pembelian_KotakHistoriBarang() {
+    public static Pembelian_KotakHistoriBarang obj = null;
+
+    Pembelian_KotakHistoriBarang() {
         initComponents();
-        loadDisable();
-       
+        this.setVisible(true);
+
     }
 
-    public static Pembelian_KotakHistoriBarang getObj() {
+    public void History(String Kode) {
+        try {
+            String sql = "SELECT pembelian.no_faktur_pembelian,pembelian.tgl_pembelian,pembelian.discon_persen,pembelian.discon_rp,detail_pembelian.no_faktur_pembelian,"
+                    + "detail_pembelian.jumlah_barang,detail_pembelian.kode_barang,detail_pembelian.harga_pembelian "
+                    + ",detail_pembelian.harga_asli_pakai,detail_pembelian.harga_asli ,detail_pembelian.discon_rp , "
+                    + "detail_pembelian.jumlah_barang FROM pembelian,detail_pembelian "
+                    + "WHERE pembelian.no_faktur_pembelian =detail_pembelian.no_faktur_pembelian "
+                    + "AND detail_pembelian.kode_barang = '" + Kode + "' "
+                    + "order BY pembelian.no_faktur_pembelian DESC LIMIT 1";
+            System.out.println(sql);
+            java.sql.Connection conn = (Connection) Koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+            //  System.out.println(sql);
+            while (res.next()) {
+                txt_faktur.setText(res.getString("no_faktur_pembelian"));
+                txt_tanggal.setText(res.getString("tgl_pembelian"));
+                txt_beli.setText(res.getString("harga_pembelian"));
+                txt_beli2.setText(res.getString("harga_asli_pakai"));
+                txt_rata.setText(res.getString("harga_asli"));
+                txt_disc.setText(res.getString("discon_rp"));
+                txt_netto.setText(res.getString("jumlah_barang"));
+                System.out.println("ini data Faktur = " + res.getString("no_faktur_pembelian"));
+                System.out.println("ini data beli = " + res.getString("harga_pembelian"));
+                System.out.println("ini data netto = " + res.getString("jumlah_barang"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Eror" + e);
+        }
+    }
+
+    Pembelian_KotakHistoriBarang(String Kode) {
+        initComponents();
+        this.Kode = Kode;
+        System.out.println("Kode = " + this.Kode);
+        History(Kode);
+
+    }
+
+    private static Pembelian_KotakHistoriBarang getObj(int i) {
+
+            System.out.println("Get obj obj obj = " + obj);
         if (obj == null) {
-            obj = new Pembelian_KotakHistoriBarang();
-            
+            System.out.println("Get obj Kode = " + Kode);
+            obj = new Pembelian_KotakHistoriBarang(Kode);
         }
         return obj;
     }
@@ -100,12 +146,15 @@ public class Pembelian_KotakHistoriBarang extends javax.swing.JFrame {
         jLabel16.setText("Hrg Beli");
 
         txt_faktur.setBackground(new java.awt.Color(255, 255, 204));
+        txt_faktur.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txt_faktur.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.lightGray));
 
         txt_tanggal.setBackground(new java.awt.Color(255, 255, 204));
+        txt_tanggal.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txt_tanggal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.lightGray));
 
         txt_beli.setBackground(new java.awt.Color(255, 255, 204));
+        txt_beli.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txt_beli.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.lightGray));
 
         jLabel20.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -113,9 +162,11 @@ public class Pembelian_KotakHistoriBarang extends javax.swing.JFrame {
         jLabel20.setText("Hrg Rata2");
 
         txt_beli2.setBackground(new java.awt.Color(255, 255, 204));
+        txt_beli2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txt_beli2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.lightGray));
 
         txt_rata.setBackground(new java.awt.Color(255, 255, 204));
+        txt_rata.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txt_rata.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.lightGray));
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -127,6 +178,7 @@ public class Pembelian_KotakHistoriBarang extends javax.swing.JFrame {
         jLabel22.setText("Disc");
 
         txt_disc.setBackground(new java.awt.Color(255, 255, 204));
+        txt_disc.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txt_disc.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.lightGray));
 
         jLabel23.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -134,6 +186,7 @@ public class Pembelian_KotakHistoriBarang extends javax.swing.JFrame {
         jLabel23.setText("Netto Beli");
 
         txt_netto.setBackground(new java.awt.Color(255, 255, 204));
+        txt_netto.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txt_netto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.lightGray));
 
         javax.swing.GroupLayout PanelHistoriLayout = new javax.swing.GroupLayout(PanelHistori);
@@ -246,7 +299,7 @@ public class Pembelian_KotakHistoriBarang extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Pembelian_KotakHistoriBarang().setVisible(true);
-                
+
             }
         });
     }
